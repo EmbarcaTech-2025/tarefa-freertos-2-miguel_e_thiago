@@ -59,7 +59,7 @@ add_executable(${ProjectName}
 pico_set_program_name(${ProjectName} "fly_pong")
 pico_set_program_version(${ProjectName} "0.1")
 
-pico_generate_pio_header(${ProjectName} ${CMAKE_CURRENT_LIST_DIR}/ws2818b.pio)
+pico_generate_pio_header(${ProjectName} ${CMAKE_CURRENT_LIST_DIR}/pio/ws2818b.pio)
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(${ProjectName} 0)

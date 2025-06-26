@@ -41,13 +41,23 @@ Fly-Pong é um jogo de ping‑pong multiplayer desenvolvido para Raspberry Pi Pi
   - `lwipopts.h`
   - `ssd1306.h`, `ssd1306_font.h`, `ssd1306_i2c.h`
 
+**pio/**
+
+- `ws2818b.pio` — programa PIO para controle de LEDs
+
 ---
 
 ## ▶️ Como usar
 
-1. Conecte sua Pico W à rede WiFi definindo `WIFI_SSID` e `WIFI_PASSWORD` em `main.c`.
-2. Ajuste o endereço IP do broker MQTT (`IP`, `PORT`, `MOSQUITTO_USER`).
-3. Compile com CMake e Pico SDK:
+1. Clone o repositório do FreeRTOS Kernel na pasta `lib/FreeRTOS-Kernel`:
+
+   ```bash
+   git clone https://github.com/FreeRTOS/FreeRTOS-Kernel lib/FreeRTOS-Kernel
+   ```
+
+2. Conecte sua Pico W à rede WiFi definindo `WIFI_SSID` e `WIFI_PASSWORD` em `main.c`.
+3. Ajuste o endereço IP do broker MQTT (`IP`, `PORT`, `MOSQUITTO_USER`).
+4. Compile com CMake e Pico SDK:
 
    ```bash
    mkdir build && cd build
@@ -55,13 +65,13 @@ Fly-Pong é um jogo de ping‑pong multiplayer desenvolvido para Raspberry Pi Pi
    make
    ```
 
-4. Flash no Pico W:
+5. Flash no Pico W:
 
    ```bash
    cp fly_pong.uf2 /media/<seu-usuario>/RPI-RP2
    ```
 
-5. Abra dois jogadores (uma BitDogLab configurada como **fly**, outra como **pong**) e pressione os botões para controlar a raquete.
+6. Abra dois jogadores (uma BitDogLab configurada como **fly**, outra como **pong**) e pressione os botões para controlar a raquete.
 
 ---
 
@@ -85,6 +95,16 @@ Fly-Pong é um jogo de ping‑pong multiplayer desenvolvido para Raspberry Pi Pi
 
 ---
 
+Autores: _Miguel Carvalho e Thiago Carrijo_
+
+Curso: Residência Tecnológica em Sistemas EmbarcadosMore actions
+
+Instituição: EmbarcaTech - HBr
+
+Brasília, 25 de Junho de 2025
+
+---
+
 **Licença**
 
-Este projeto é distribuído sob a licença MIT. Sinta‑se à vontade para contribuir ou adaptar conforme necessário.
+Este projeto é distribuído sob a licença GNU GPL-3.0.
