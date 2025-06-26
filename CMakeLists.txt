@@ -1,3 +1,14 @@
+# Generated Cmake Pico project file
+
+cmake_minimum_required(VERSION 3.13)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Initialise pico_sdk from installed location
+# (note this can come from environment, CMake cache etc)
+
 # == DO NOT EDIT THE FOLLOWING LINES for the Raspberry Pi Pico VS Code Extension to work ==
 if(WIN32)
     set(USERHOME $ENV{USERPROFILE})
@@ -12,46 +23,75 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
-set(PICO_BOARD pico CACHE STRING "Board type")
-
-cmake_minimum_required(VERSION 3.12)
+set(PICO_BOARD pico_w CACHE STRING "Board type")
 
 # Set any variables required for importing libraries
-if (DEFINED ENV{FREERTOS_PATH})
-  SET(FREERTOS_PATH $ENV{FREERTOS_PATH})
-else()
-  SET(FREERTOS_PATH ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel)
-endif()
-
-message("FreeRTOS Kernel located in ${FREERTOS_PATH}")
+SET(FREERTOS_KERNEL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib/FreeRTOS-Kernel)
 
 # Import those libraries
+SET(ProjectName fly_pong)
+# Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
-include(${FREERTOS_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
+include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
 
-# Define project
-project(embarcatech-tarefa-freertos-2 C CXX ASM)
+project(fly_pong C CXX ASM)
 
-# Initialize the Raspberry Pi Pico SDK
+# Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-add_executable(embarcatech-tarefa-freertos-2
-    main.c
+# Add executable. Default name is the project name, version 0.1
+
+add_executable(${ProjectName}
+    src/main.c
+    #src/iot_security_lab.c 
+    src/led_matrix.c
+    src/mqtt_comm.c
+    src/wifi_conn.c
+    src/xor_cipher.c
+    src/led_rgb.c
+    src/button.c
+    src/buzzer.c
+    src/ball.c
+    src/ssd1306_i2c.c
+    src/oled.c
 )
 
-target_include_directories(embarcatech-tarefa-freertos-2 PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}
-    ${CMAKE_CURRENT_LIST_DIR}/include
+pico_set_program_name(${ProjectName} "fly_pong")
+pico_set_program_version(${ProjectName} "0.1")
+
+pico_generate_pio_header(${ProjectName} ${CMAKE_CURRENT_LIST_DIR}/ws2818b.pio)
+
+# Modify the below lines to enable/disable output over UART/USB
+pico_enable_stdio_uart(${ProjectName} 0)
+pico_enable_stdio_usb(${ProjectName} 1)
+
+# Add the standard library to the build
+target_link_libraries(${ProjectName}
+        # Biblioteca padrão do Pico SDK, que fornece funções básicas para o RP2040 (GPIO, temporizadores, UART, etc.).
+        pico_stdlib
+        pico_cyw43_arch_lwip_threadsafe_background
+        pico_lwip_mqtt
+        pico_lwip
+        pico_cyw43_driver
+        FreeRTOS-Kernel-Heap4
+        hardware_pwm
+        hardware_pio
+        hardware_clocks
+        hardware_adc
+        hardware_i2c
+        # pico_time
+        # pico_unique_id
 )
 
-target_link_libraries(embarcatech-tarefa-freertos-2 
-    pico_stdlib 
-    FreeRTOS-Kernel-Heap4 
-    hardware_i2c
-    )
+# Add the standard include files to the build
+target_include_directories(${ProjectName} PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/include
+)
 
-pico_add_extra_outputs(embarcatech-tarefa-freertos-2)
+# Add any user requested libraries
+target_link_libraries(${ProjectName} 
+        
+        )
 
-# if you have anything in "lib" folder then uncomment below - remember to add a CMakeLists.txt
-# file to the "lib" directory
-#add_subdirectory(lib)
+pico_add_extra_outputs(${ProjectName})
+
